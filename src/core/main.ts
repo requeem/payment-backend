@@ -14,13 +14,15 @@ async function bootstrap() {
    const config = app.get(ConfigService)
    const logger = new Logger(CoreModule.name)
 
+   app.setGlobalPrefix('/api')
+
    app.enableCors(getCorsConfig(config))
    const configSwagger = getSwaggerConfig()
    const document = SwaggerModule.createDocument(app, configSwagger)
    app.useGlobalPipes(new ValidationPipe())
    app.use(cookieParser(config.getOrThrow<string>('COOKIE_SECRET')))
    app.use(
-      '/scalar',
+      '/api/scalar',
       apiReference({
          content: document
       })

@@ -13,6 +13,9 @@ model User {
   email    String @unique
   password String
 
+  transactions  Transaction[]
+  subscriptions UserSubscription?
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -31,8 +34,86 @@ model Plan {
 
   isFeatured Boolean @default(false) @map("is_featured")
 
+  createdAt     DateTime           @default(now()) @map("created_at")
+  updatedAt     DateTime           @updatedAt @map("updated_at")
+  subscriptions UserSubscription[]
+
+  @@map("plans")
+}
+
+model Transaction {
+  id String @id @default(nanoid())
+
+  amount Int
+
+  provider TransactionProvider
+  status   TransactionStatus   @default(PENDING)
+
+  externalId   String? @map("external_id")
+  providerMeta Json?   @map("provider_meta")
+
+  billingPeriod BillingPeriod @map("billing_period")
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  @@map("plans")
+  user           User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         String            @map("user_id")
+  subscription   UserSubscription? @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  subscriptionId String?
+
+  @@map("transactions")
+}
+
+model UserSubscription {
+  id String @id @default(nanoid())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @unique @map("user_id")
+
+  plan   Plan   @relation(fields: [planId], references: [id], onDelete: Cascade)
+  planId String @map("plan_id")
+
+
+  status SubscriptionStatus @default(PENDING_PAYMENT)
+
+  startDate DateTime? @map("start_date")
+  endDate   DateTime? @map("end_date")
+
+  transaction Transaction[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("user_subscriptions")
+}
+
+enum SubscriptionStatus {
+  PENDING_PAYMENT
+  ACTIVE
+  EXPIRED
+
+  @@map("subscription_status")
+}
+
+enum TransactionProvider {
+  YOOKASSA
+  STRIPE
+  CRYPTOPAY
+}
+
+enum TransactionStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  CANCELED
+
+  @@map("transaction_status")
+}
+
+enum BillingPeriod {
+  MONTHLY
+  YEARLY
+
+  @@map("billing_period")
 }
