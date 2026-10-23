@@ -9,12 +9,30 @@ datasource db {
 model User {
   id String @id @default(nanoid())
 
-  name String
-  email String @unique
+  name     String
+  email    String @unique
   password String
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("users")
+}
+
+model Plan {
+  id String @id @default(nanoid())
+
+  title       String
+  description String
+  features    String[]
+
+  mountlyPrice Int @map("mountly_price")
+  yearlyPrice  Int @map("yearly_price")
+
+  isFeatured Boolean @default(false) @map("is_featured")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("plans")
 }
