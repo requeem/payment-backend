@@ -12,7 +12,7 @@ export class PlanService {
          },
          select: {
             id: true,
-            name: true,
+            title: true,
             mountlyPrice: true,
             yearlyPrice: true,
             features: true,
@@ -30,7 +30,7 @@ export class PlanService {
          },
          select: {
             id: true,
-            name: true,
+            title: true,
             mountlyPrice: true,
             yearlyPrice: true,
             features: true,
