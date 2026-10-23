@@ -5,4 +5,4 @@ import { PrismaModule } from './prisma/prisma.module'
    imports: [PrismaModule],
    exports: [PrismaModule]
 })
-export class InfraModule {}
+export class InfrastructureModule {}

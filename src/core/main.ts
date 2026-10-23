@@ -1,19 +1,35 @@
-import { Logger } from '@nestjs/common'
+import { Logger, ValidationPipe } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { NestFactory } from '@nestjs/core'
+import { SwaggerModule } from '@nestjs/swagger'
+import { apiReference } from '@scalar/nestjs-api-reference'
 import { getCorsConfig } from 'src/config'
-import { AppModule } from './app.module'
+import { getSwaggerConfig } from 'src/config/swagger.config'
+import { CoreModule } from './core.module'
+import cookieParser = require('cookie-parser')
 
 async function bootstrap() {
-   const app = await NestFactory.create(AppModule)
+   const app = await NestFactory.create(CoreModule)
 
    const config = app.get(ConfigService)
-   const logger = new Logger(AppModule.name)
+   const logger = new Logger(CoreModule.name)
+
+   app.enableCors(getCorsConfig(config))
+   const configSwagger = getSwaggerConfig()
+   const document = SwaggerModule.createDocument(app, configSwagger)
+   app.useGlobalPipes(new ValidationPipe())
+   app.use(cookieParser(config.getOrThrow<string>('COOKIE_SECRET')))
+   app.use(
+      '/scalar',
+      apiReference({
+         content: document
+      })
+   )
+
+   SwaggerModule.setup('api/docs', app, document, { jsonDocumentUrl: 'api/docs-json' })
 
    const port = config.getOrThrow('HTTP_PORT')
    const host = config.getOrThrow('HTTP_HOST')
-
-   app.enableCors(getCorsConfig(config))
 
    try {
       await app.listen(port)
