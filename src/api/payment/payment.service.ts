@@ -1,14 +1,16 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { BillingPeriod, TransactionProvider, User } from '@prisma/client'
 import { PrismaService } from 'src/infrastructure/prisma/prisma.service'
-import { InitPaymentDto } from './dto/init-payment.dto'
+import { CreatePaymentDto } from './dto/create-payment.dto'
+import { StripeService } from './providers/stripe/stripe.service'
 import { YoomoneyService } from './providers/yoomomey/yoomoney.service'
 
 @Injectable()
 export class PaymentService {
    public constructor(
       private readonly prismaService: PrismaService,
-      private readonly yoomoneyService: YoomoneyService
+      private readonly yoomoneyService: YoomoneyService,
+      private readonly stripeService: StripeService
    ) {}
 
    public async getHistory(user: User) {
@@ -37,7 +39,7 @@ export class PaymentService {
       return formatted
    }
 
-   public async init(dto: InitPaymentDto, user: User) {
+   public async createPayment(dto: CreatePaymentDto, user: User) {
       const { planId, provider, billingPeriod } = dto
 
       const plan = await this.prismaService.plan.findUnique({
@@ -87,6 +89,10 @@ export class PaymentService {
       switch (provider) {
          case TransactionProvider.YOOKASSA:
             payment = await this.yoomoneyService.create(plan, transaction, billingPeriod)
+            break
+         case TransactionProvider.STRIPE:
+            payment = await this.stripeService.create(plan, transaction, user, billingPeriod)
+            break
       }
 
       await this.prismaService.transaction.update({

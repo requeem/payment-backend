@@ -2,9 +2,9 @@ import { ApiProperty } from '@nestjs/swagger'
 import { BillingPeriod, TransactionProvider } from '@prisma/client'
 import { IsEnum, IsNotEmpty, IsString } from 'class-validator'
 
-export class InitPaymentDto {
+export class CreatePaymentDto {
    @ApiProperty({
-      example: '8H1gPwD5kzWzAwqjloqtp'
+      example: 'G25WbPndDL2VlwS4fUQc3'
    })
    @IsString()
    @IsNotEmpty()

@@ -7,7 +7,9 @@ export const plans: Omit<Plan, 'createdAt' | 'updatedAt' | 'id'>[] = [
       mountlyPrice: 9.99,
       yearlyPrice: 99.99,
       features: ['Feature 1', 'Feature 2'],
-      isFeatured: false
+      isFeatured: false,
+      stripeMountlyPriceId: 'price_1UTmA6L3TZITFODDu9y0uP3g',
+      stripeYearlyPriceId: 'price_1UTmA6L3TZITFODDltODolNZ'
    },
    {
       title: 'Профессиональный план',
@@ -15,7 +17,9 @@ export const plans: Omit<Plan, 'createdAt' | 'updatedAt' | 'id'>[] = [
       mountlyPrice: 19.99,
       yearlyPrice: 199.99,
       features: ['Feature 1', 'Feature 2', 'Feature 3'],
-      isFeatured: true
+      isFeatured: true,
+      stripeMountlyPriceId: 'price_1UTmCpL3TZITFODDSMWxQ5f5',
+      stripeYearlyPriceId: 'price_1UTmCpL3TZITFODDS0GryxH3'
    },
    {
       title: 'Премиум план',
@@ -23,6 +27,8 @@ export const plans: Omit<Plan, 'createdAt' | 'updatedAt' | 'id'>[] = [
       mountlyPrice: 29.99,
       yearlyPrice: 299.99,
       features: ['Feature 1', 'Feature 2', 'Feature 3', 'Feature 4'],
-      isFeatured: true
+      isFeatured: true,
+      stripeMountlyPriceId: 'price_1UTmDxL3TZITFODD2i6jkZai',
+      stripeYearlyPriceId: 'price_1UTmDxL3TZITFODDTbUDzHNi'
    }
 ]

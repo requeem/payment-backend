@@ -32,6 +32,9 @@ model Plan {
   mountlyPrice Int @map("mountly_price")
   yearlyPrice  Int @map("yearly_price")
 
+  stripeMountlyPriceId String @map("stripe_mountly_price_id")
+  stripeYearlyPriceId String @map("stripe_yearly_price_id")
+
   isFeatured Boolean @default(false) @map("is_featured")
 
   createdAt     DateTime           @default(now()) @map("created_at")
