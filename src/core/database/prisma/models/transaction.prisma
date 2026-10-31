@@ -1,0 +1,43 @@
+model Transaction {
+  id String @id @default(nanoid())
+
+  amount Int
+
+  provider TransactionProvider
+  status   TransactionStatus   @default(PENDING)
+
+  externalId   String? @map("external_id")
+  providerMeta Json?   @map("provider_meta")
+
+  billingPeriod BillingPeriod @map("billing_period")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user           User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         String            @map("user_id")
+  subscription   UserSubscription? @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  subscriptionId String?
+
+  @@map("transactions")
+}
+
+enum TransactionProvider {
+  YOOKASSA
+  STRIPE
+}
+
+enum TransactionStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  
+  @@map("transaction_status")
+}
+
+enum BillingPeriod {
+  MONTHLY
+  YEARLY
+
+  @@map("billing_period")
+}

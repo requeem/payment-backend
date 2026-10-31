@@ -1,11 +1,13 @@
 import { Body, Controller, HttpCode, Ip, Post } from '@nestjs/common'
 import { WebhookService } from './webhook.service'
 import { YookassaWebhookDto } from './dto/yookassa-webhook'
+import { YookassaWebhook } from 'nestjs-yookassa'
 
 @Controller('webhook')
 export class WebhookController {
    public constructor(private readonly webhookService: WebhookService) {}
 
+   @YookassaWebhook()
    @Post('yookassa')
    @HttpCode(200)
    public async handleYookassa(@Body() dto: YookassaWebhookDto, @Ip() ip: string) {

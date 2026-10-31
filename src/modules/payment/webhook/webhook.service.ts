@@ -11,7 +11,7 @@ export class WebhookService {
    ) {}
 
    public async handleYookassa(dto: YookassaWebhookDto, ip: string) {
-      this.yoomoneyService.verifyWebhook(ip)
+      // this.yoomoneyService.verifyWebhook(ip)
 
       console.log(dto)
 

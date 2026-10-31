@@ -1,13 +1,13 @@
+import { getCorsConfig } from '@/core/config'
+import { getSwaggerConfig } from '@/core/config/swagger.config'
 import { Logger, ValidationPipe } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { NestFactory } from '@nestjs/core'
 import type { NestExpressApplication } from '@nestjs/platform-express'
 import { SwaggerModule } from '@nestjs/swagger'
 import { apiReference } from '@scalar/nestjs-api-reference'
-import { getCorsConfig } from '@/config'
-import { getSwaggerConfig } from '@/config/swagger.config'
-import { AppModule } from './app.module'
 import cookieParser from 'cookie-parser'
+import { AppModule } from './app.module'
 
 async function bootstrap() {
    const app = await NestFactory.create<NestExpressApplication>(AppModule)
@@ -15,7 +15,7 @@ async function bootstrap() {
    const config = app.get(ConfigService)
    const logger = new Logger(AppModule.name)
 
-   // app.setGlobalPrefix('/api')
+   app.setGlobalPrefix('/api')
 
    app.set('trust proxy', true)
 

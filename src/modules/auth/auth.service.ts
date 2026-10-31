@@ -1,12 +1,11 @@
-import { isDev, ms } from '@/shared'
+import { PrismaService } from '@/core/database/prisma/prisma.service'
+import { isDev, ms } from '@/shared/utils'
 import { ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
 import { User } from '@prisma/client'
 import { hash, verify } from 'argon2'
 import { Request, Response } from 'express'
-
-import { PrismaService } from '@/infrastructure/database/prisma/prisma.service'
 import { LoginUserDto } from './dto/loginUser.dto'
 import { RegisterUserDto } from './dto/registerUser.dto'
 import { JwtPayload } from './interfaces/jwt.interface'
@@ -39,7 +38,7 @@ export class AuthService {
    private setCookie(res: Response, key: string, value: string, expires: Date) {
       res.cookie(key, value, {
          httpOnly: true,
-         secure: isDev(this.configService) ? false : true,
+         secure: !isDev(this.configService),
          sameSite: 'lax',
          domain: this.COOKIES_DOMAIN,
          expires
@@ -75,6 +74,7 @@ export class AuthService {
       })
 
       await this.setTokens(res, newUser)
+
       return { success: true }
    }
 
@@ -121,7 +121,7 @@ export class AuthService {
       try {
          this.setCookie(res, 'accessToken', '', new Date(0))
          this.setCookie(res, 'refreshToken', '', new Date(0))
-         return true
+         return { success: true }
       } catch (error) {
          throw new InternalServerErrorException('Ошибка при выходе из системы')
       }

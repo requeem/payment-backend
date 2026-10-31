@@ -1,14 +1,18 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common'
 import { BillingPeriod, SubscriptionStatus, TransactionStatus } from '@prisma/client'
 
-import { PrismaService } from '@/infrastructure/database/prisma/prisma.service'
+import { PrismaService } from '@/core/database/prisma/prisma.service'
+import { MailService } from '@/libs/mail/mail.service'
 import { PaymentWebhookResult } from './interfaces/payment-webhook.interface'
 
 @Injectable()
 export class PaymentHandler {
    private readonly logger = new Logger(PaymentHandler.name)
 
-   public constructor(private readonly prismaService: PrismaService) {}
+   public constructor(
+      private readonly prismaService: PrismaService,
+      private readonly mailService: MailService
+   ) {}
 
    public async processResult(result: PaymentWebhookResult) {
       const { paymentId, planId, raw, status, transactionId } = result
@@ -28,7 +32,7 @@ export class PaymentHandler {
       })
 
       if (!transaction) {
-         throw new NotFoundException('Транзакция не найденна')
+         throw new NotFoundException('Транзакция не найдена')
       }
 
       await this.prismaService.transaction.update({

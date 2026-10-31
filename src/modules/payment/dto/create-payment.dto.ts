@@ -4,7 +4,7 @@ import { IsEnum, IsNotEmpty, IsString } from 'class-validator'
 
 export class CreatePaymentDto {
    @ApiProperty({
-      example: 'G25WbPndDL2VlwS4fUQc3'
+      example: 'sLuBbGapad-UODmqDB2uZ'
    })
    @IsString()
    @IsNotEmpty()

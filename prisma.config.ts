@@ -1,9 +1,9 @@
 import 'dotenv/config'
 import { defineConfig, env } from 'prisma/config'
 export default defineConfig({
-   schema: 'src/infrastructure/database/prisma/schema.prisma',
+   schema: 'src/core/database/prisma/models',
    migrations: {
-      path: 'src/infrastructure/database/prisma/migrations'
+      path: 'src/core/database/prisma/migrations'
    },
    datasource: {
       url: env('POSTGRES_URI')

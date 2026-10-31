@@ -1,6 +1,7 @@
-import { PrismaService } from '@/infrastructure/database/prisma/prisma.service'
+import { PrismaService } from '@/core/database/prisma/prisma.service'
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { BillingPeriod, TransactionProvider, User } from '@prisma/client'
+import { plainToInstance } from 'class-transformer'
 import { CreatePaymentDto } from './dto/create-payment.dto'
 import { StripeService } from './providers/stripe/stripe.service'
 import { YoomoneyService } from './providers/yoomomey/yoomoney.service'
@@ -29,14 +30,7 @@ export class PaymentService {
             }
          }
       })
-      const formatted = history.map((item) => ({
-         id: item.id,
-         amount: item.amount,
-         plan: item.subscription?.plan.title,
-         provider: item.provider,
-         status: item.status
-      }))
-      return formatted
+      return history
    }
 
    public async createPayment(dto: CreatePaymentDto, user: User) {

@@ -1,0 +1,30 @@
+model UserSubscription {
+  id String @id @default(nanoid())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @unique @map("user_id")
+
+  plan   Plan   @relation(fields: [planId], references: [id], onDelete: Cascade)
+  planId String @map("plan_id")
+
+
+  status SubscriptionStatus @default(PENDING_PAYMENT)
+
+  startDate DateTime? @map("start_date")
+  endDate   DateTime? @map("end_date")
+
+  transaction Transaction[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("user_subscriptions")
+}
+
+enum SubscriptionStatus {
+  PENDING_PAYMENT
+  ACTIVE
+  EXPIRED
+
+  @@map("subscription_status")
+}
